@@ -10,12 +10,25 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- task: SonarCloudPrepare@3
+  inputs:
+    SonarQube: 'sc-sonarcloud'
+    organization: 'hinault'
+    scannerMode: 'cli'
+    configMode: 'manual'
+    cliProjectKey: 'hinault_H25-SecuriteApplicative'
+    cliProjectName: 'H25-SecuriteApplicative'
+    cliSources: '.'
 - task: NodeTool@0
   inputs:
-    versionSpec: '20.x'
+    versionSpec: '18.x'
   displayName: 'Install Node.js'
 
 - script: |
     npm install
     npm run build
   displayName: 'npm install and build'
+
+- task: SonarCloudAnalyze@3
+  inputs:
+    jdkversion: 'JAVA_HOME_17_X64'
